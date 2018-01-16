@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9b196f04f7e64bd98630b89bb1e65ef9" Name="Diagram1" ZoomLevel="87">
+        <EntityTypeShape EntityType="TradingPlatformModel.broker" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.company" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.currency" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.place" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.share" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.shares_prices" Width="1.5" PointX="7.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.stock_exchanges" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.sysdiagram" Width="1.5" PointX="5.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.trade" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TradingPlatformModel.brokers_Trades_List" Width="1.5" PointX="7.75" PointY="7.875" IsExpanded="true" />
+        <AssociationConnector Association="TradingPlatformModel.trade_broker_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.comp_place_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.share_company_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.share_currency_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.se_place_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.shares_prices_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.trade_share_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.trade_stock_ex_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="TradingPlatformModel.broker_stock_ex" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

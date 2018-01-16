@@ -1,0 +1,681 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TradingPlatformModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="broker_stock_ex">
+          <Key>
+            <PropertyRef Name="broker_id" />
+            <PropertyRef Name="stock_ex_id" />
+          </Key>
+          <Property Name="broker_id" Type="int" Nullable="false" />
+          <Property Name="stock_ex_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="brokers">
+          <Key>
+            <PropertyRef Name="broker_id" />
+          </Key>
+          <Property Name="broker_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="25" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="companies">
+          <Key>
+            <PropertyRef Name="company_id" />
+          </Key>
+          <Property Name="company_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="20" />
+          <Property Name="place_id" Type="int" />
+        </EntityType>
+        <EntityType Name="currencies">
+          <Key>
+            <PropertyRef Name="currency_id" />
+          </Key>
+          <Property Name="currency_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="symbol" Type="nvarchar" MaxLength="5" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="places">
+          <Key>
+            <PropertyRef Name="place_id" />
+          </Key>
+          <Property Name="place_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="city" Type="nvarchar" MaxLength="50" />
+          <Property Name="country" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="shares">
+          <Key>
+            <PropertyRef Name="share_id" />
+          </Key>
+          <Property Name="share_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="company_id" Type="int" />
+          <Property Name="currency_id" Type="int" />
+        </EntityType>
+        <EntityType Name="shares_prices">
+          <Key>
+            <PropertyRef Name="share_id" />
+            <PropertyRef Name="time_start" />
+          </Key>
+          <Property Name="share_id" Type="int" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="time_start" Type="date" Nullable="false" />
+          <Property Name="time_end" Type="date" />
+        </EntityType>
+        <EntityType Name="stock_exchanges">
+          <Key>
+            <PropertyRef Name="stock_ex_id" />
+          </Key>
+          <Property Name="stock_ex_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="symbol" Type="nvarchar" MaxLength="10" />
+          <Property Name="place_id" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="trades">
+          <Key>
+            <PropertyRef Name="trade_id" />
+          </Key>
+          <Property Name="trade_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="share_id" Type="int" />
+          <Property Name="broker_id" Type="int" />
+          <Property Name="stock_ex_id" Type="int" />
+          <Property Name="transaction_time" Type="date" />
+          <Property Name="share_amount" Type="int" />
+          <Property Name="price_total" Type="decimal" Precision="20" Scale="2" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TradingPlatform.dbo.brokers_Trades_List' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="brokers_Trades_List">
+          <Key>
+            <PropertyRef Name="broker_id" />
+          </Key>
+          <Property Name="broker_id" Type="int" Nullable="false" />
+          <Property Name="Broker_FullName" Type="nvarchar" MaxLength="51" />
+          <Property Name="share_amount" Type="int" />
+        </EntityType>
+        <Association Name="bse_broker_fk">
+          <End Role="brokers" Type="Self.brokers" Multiplicity="1" />
+          <End Role="broker_stock_ex" Type="Self.broker_stock_ex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="brokers">
+              <PropertyRef Name="broker_id" />
+            </Principal>
+            <Dependent Role="broker_stock_ex">
+              <PropertyRef Name="broker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="bse_se_fk">
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="1" />
+          <End Role="broker_stock_ex" Type="Self.broker_stock_ex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_exchanges">
+              <PropertyRef Name="stock_ex_id" />
+            </Principal>
+            <Dependent Role="broker_stock_ex">
+              <PropertyRef Name="stock_ex_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comp_place_fk">
+          <End Role="places" Type="Self.places" Multiplicity="0..1" />
+          <End Role="companies" Type="Self.companies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="places">
+              <PropertyRef Name="place_id" />
+            </Principal>
+            <Dependent Role="companies">
+              <PropertyRef Name="place_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="se_place_fk">
+          <End Role="places" Type="Self.places" Multiplicity="0..1" />
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="places">
+              <PropertyRef Name="place_id" />
+            </Principal>
+            <Dependent Role="stock_exchanges">
+              <PropertyRef Name="place_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="share_company_fk">
+          <End Role="companies" Type="Self.companies" Multiplicity="0..1" />
+          <End Role="shares" Type="Self.shares" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="companies">
+              <PropertyRef Name="company_id" />
+            </Principal>
+            <Dependent Role="shares">
+              <PropertyRef Name="company_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="share_currency_fk">
+          <End Role="currencies" Type="Self.currencies" Multiplicity="0..1" />
+          <End Role="shares" Type="Self.shares" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="currencies">
+              <PropertyRef Name="currency_id" />
+            </Principal>
+            <Dependent Role="shares">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="shares_prices_fk">
+          <End Role="shares" Type="Self.shares" Multiplicity="1" />
+          <End Role="shares_prices" Type="Self.shares_prices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="shares">
+              <PropertyRef Name="share_id" />
+            </Principal>
+            <Dependent Role="shares_prices">
+              <PropertyRef Name="share_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="trade_broker_fk">
+          <End Role="brokers" Type="Self.brokers" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="brokers">
+              <PropertyRef Name="broker_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="broker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="trade_share_fk">
+          <End Role="shares" Type="Self.shares" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="shares">
+              <PropertyRef Name="share_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="share_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="trade_stock_ex_fk">
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trades" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_exchanges">
+              <PropertyRef Name="stock_ex_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="stock_ex_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TradingPlatformModelStoreContainer">
+          <EntitySet Name="broker_stock_ex" EntityType="Self.broker_stock_ex" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="brokers" EntityType="Self.brokers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="companies" EntityType="Self.companies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="currencies" EntityType="Self.currencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="places" EntityType="Self.places" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="shares" EntityType="Self.shares" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="shares_prices" EntityType="Self.shares_prices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="stock_exchanges" EntityType="Self.stock_exchanges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="trades" EntityType="Self.trades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="brokers_Trades_List" EntityType="Self.brokers_Trades_List" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [brokers_Trades_List].[broker_id] AS [broker_id], 
+    [brokers_Trades_List].[Broker_FullName] AS [Broker_FullName], 
+    [brokers_Trades_List].[share_amount] AS [share_amount]
+    FROM [dbo].[brokers_Trades_List] AS [brokers_Trades_List]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="bse_broker_fk" Association="Self.bse_broker_fk">
+            <End Role="brokers" EntitySet="brokers" />
+            <End Role="broker_stock_ex" EntitySet="broker_stock_ex" />
+          </AssociationSet>
+          <AssociationSet Name="bse_se_fk" Association="Self.bse_se_fk">
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+            <End Role="broker_stock_ex" EntitySet="broker_stock_ex" />
+          </AssociationSet>
+          <AssociationSet Name="comp_place_fk" Association="Self.comp_place_fk">
+            <End Role="places" EntitySet="places" />
+            <End Role="companies" EntitySet="companies" />
+          </AssociationSet>
+          <AssociationSet Name="se_place_fk" Association="Self.se_place_fk">
+            <End Role="places" EntitySet="places" />
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+          </AssociationSet>
+          <AssociationSet Name="share_company_fk" Association="Self.share_company_fk">
+            <End Role="companies" EntitySet="companies" />
+            <End Role="shares" EntitySet="shares" />
+          </AssociationSet>
+          <AssociationSet Name="share_currency_fk" Association="Self.share_currency_fk">
+            <End Role="currencies" EntitySet="currencies" />
+            <End Role="shares" EntitySet="shares" />
+          </AssociationSet>
+          <AssociationSet Name="shares_prices_fk" Association="Self.shares_prices_fk">
+            <End Role="shares" EntitySet="shares" />
+            <End Role="shares_prices" EntitySet="shares_prices" />
+          </AssociationSet>
+          <AssociationSet Name="trade_broker_fk" Association="Self.trade_broker_fk">
+            <End Role="brokers" EntitySet="brokers" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+          <AssociationSet Name="trade_share_fk" Association="Self.trade_share_fk">
+            <End Role="shares" EntitySet="shares" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+          <AssociationSet Name="trade_stock_ex_fk" Association="Self.trade_stock_ex_fk">
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TradingPlatformModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="broker">
+          <Key>
+            <PropertyRef Name="broker_id" />
+          </Key>
+          <Property Name="broker_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="first_name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="last_name" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="trades" Relationship="Self.trade_broker_fk" FromRole="brokers" ToRole="trades" />
+          <NavigationProperty Name="stock_exchanges" Relationship="Self.broker_stock_ex" FromRole="brokers" ToRole="stock_exchanges" />
+        </EntityType>
+        <EntityType Name="company">
+          <Key>
+            <PropertyRef Name="company_id" />
+          </Key>
+          <Property Name="company_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="place_id" Type="Int32" />
+          <NavigationProperty Name="place" Relationship="Self.comp_place_fk" FromRole="companies" ToRole="places" />
+          <NavigationProperty Name="shares" Relationship="Self.share_company_fk" FromRole="companies" ToRole="shares" />
+        </EntityType>
+        <EntityType Name="currency">
+          <Key>
+            <PropertyRef Name="currency_id" />
+          </Key>
+          <Property Name="currency_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="symbol" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="shares" Relationship="Self.share_currency_fk" FromRole="currencies" ToRole="shares" />
+        </EntityType>
+        <EntityType Name="place">
+          <Key>
+            <PropertyRef Name="place_id" />
+          </Key>
+          <Property Name="place_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="companies" Relationship="Self.comp_place_fk" FromRole="places" ToRole="companies" />
+          <NavigationProperty Name="stock_exchanges" Relationship="Self.se_place_fk" FromRole="places" ToRole="stock_exchanges" />
+        </EntityType>
+        <EntityType Name="share">
+          <Key>
+            <PropertyRef Name="share_id" />
+          </Key>
+          <Property Name="share_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="company_id" Type="Int32" />
+          <Property Name="currency_id" Type="Int32" />
+          <NavigationProperty Name="company" Relationship="Self.share_company_fk" FromRole="shares" ToRole="companies" />
+          <NavigationProperty Name="currency" Relationship="Self.share_currency_fk" FromRole="shares" ToRole="currencies" />
+          <NavigationProperty Name="shares_prices" Relationship="Self.shares_prices_fk" FromRole="shares" ToRole="shares_prices" />
+          <NavigationProperty Name="trades" Relationship="Self.trade_share_fk" FromRole="shares" ToRole="trades" />
+        </EntityType>
+        <EntityType Name="shares_prices">
+          <Key>
+            <PropertyRef Name="share_id" />
+            <PropertyRef Name="time_start" />
+          </Key>
+          <Property Name="share_id" Type="Int32" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="time_start" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="time_end" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="share" Relationship="Self.shares_prices_fk" FromRole="shares_prices" ToRole="shares" />
+        </EntityType>
+        <EntityType Name="stock_exchanges">
+          <Key>
+            <PropertyRef Name="stock_ex_id" />
+          </Key>
+          <Property Name="stock_ex_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="symbol" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="place_id" Type="Int32" />
+          <NavigationProperty Name="place" Relationship="Self.se_place_fk" FromRole="stock_exchanges" ToRole="places" />
+          <NavigationProperty Name="trades" Relationship="Self.trade_stock_ex_fk" FromRole="stock_exchanges" ToRole="trades" />
+          <NavigationProperty Name="brokers" Relationship="Self.broker_stock_ex" FromRole="stock_exchanges" ToRole="brokers" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="trade">
+          <Key>
+            <PropertyRef Name="trade_id" />
+          </Key>
+          <Property Name="trade_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="share_id" Type="Int32" />
+          <Property Name="broker_id" Type="Int32" />
+          <Property Name="stock_ex_id" Type="Int32" />
+          <Property Name="transaction_time" Type="DateTime" Precision="0" />
+          <Property Name="share_amount" Type="Int32" />
+          <Property Name="price_total" Type="Decimal" Precision="20" Scale="2" />
+          <NavigationProperty Name="broker" Relationship="Self.trade_broker_fk" FromRole="trades" ToRole="brokers" />
+          <NavigationProperty Name="share" Relationship="Self.trade_share_fk" FromRole="trades" ToRole="shares" />
+          <NavigationProperty Name="stock_exchanges" Relationship="Self.trade_stock_ex_fk" FromRole="trades" ToRole="stock_exchanges" />
+        </EntityType>
+        <EntityType Name="brokers_Trades_List">
+          <Key>
+            <PropertyRef Name="broker_id" />
+          </Key>
+          <Property Name="broker_id" Type="Int32" Nullable="false" />
+          <Property Name="Broker_FullName" Type="String" MaxLength="51" FixedLength="false" Unicode="true" />
+          <Property Name="share_amount" Type="Int32" />
+        </EntityType>
+        <Association Name="trade_broker_fk">
+          <End Role="brokers" Type="Self.broker" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="brokers">
+              <PropertyRef Name="broker_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="broker_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comp_place_fk">
+          <End Role="places" Type="Self.place" Multiplicity="0..1" />
+          <End Role="companies" Type="Self.company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="places">
+              <PropertyRef Name="place_id" />
+            </Principal>
+            <Dependent Role="companies">
+              <PropertyRef Name="place_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="share_company_fk">
+          <End Role="companies" Type="Self.company" Multiplicity="0..1" />
+          <End Role="shares" Type="Self.share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="companies">
+              <PropertyRef Name="company_id" />
+            </Principal>
+            <Dependent Role="shares">
+              <PropertyRef Name="company_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="share_currency_fk">
+          <End Role="currencies" Type="Self.currency" Multiplicity="0..1" />
+          <End Role="shares" Type="Self.share" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="currencies">
+              <PropertyRef Name="currency_id" />
+            </Principal>
+            <Dependent Role="shares">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="se_place_fk">
+          <End Role="places" Type="Self.place" Multiplicity="0..1" />
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="places">
+              <PropertyRef Name="place_id" />
+            </Principal>
+            <Dependent Role="stock_exchanges">
+              <PropertyRef Name="place_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="shares_prices_fk">
+          <End Role="shares" Type="Self.share" Multiplicity="1" />
+          <End Role="shares_prices" Type="Self.shares_prices" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="shares">
+              <PropertyRef Name="share_id" />
+            </Principal>
+            <Dependent Role="shares_prices">
+              <PropertyRef Name="share_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="trade_share_fk">
+          <End Role="shares" Type="Self.share" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="shares">
+              <PropertyRef Name="share_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="share_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="trade_stock_ex_fk">
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="0..1" />
+          <End Role="trades" Type="Self.trade" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_exchanges">
+              <PropertyRef Name="stock_ex_id" />
+            </Principal>
+            <Dependent Role="trades">
+              <PropertyRef Name="stock_ex_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="broker_stock_ex">
+          <End Role="brokers" Type="Self.broker" Multiplicity="*" />
+          <End Role="stock_exchanges" Type="Self.stock_exchanges" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="TradingPlatformContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="brokers" EntityType="Self.broker" />
+          <EntitySet Name="companies" EntityType="Self.company" />
+          <EntitySet Name="currencies" EntityType="Self.currency" />
+          <EntitySet Name="places" EntityType="Self.place" />
+          <EntitySet Name="shares" EntityType="Self.share" />
+          <EntitySet Name="shares_prices" EntityType="Self.shares_prices" />
+          <EntitySet Name="stock_exchanges" EntityType="Self.stock_exchanges" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="trades" EntityType="Self.trade" />
+          <EntitySet Name="brokers_Trades_List" EntityType="Self.brokers_Trades_List" />
+          <AssociationSet Name="trade_broker_fk" Association="Self.trade_broker_fk">
+            <End Role="brokers" EntitySet="brokers" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+          <AssociationSet Name="comp_place_fk" Association="Self.comp_place_fk">
+            <End Role="places" EntitySet="places" />
+            <End Role="companies" EntitySet="companies" />
+          </AssociationSet>
+          <AssociationSet Name="share_company_fk" Association="Self.share_company_fk">
+            <End Role="companies" EntitySet="companies" />
+            <End Role="shares" EntitySet="shares" />
+          </AssociationSet>
+          <AssociationSet Name="share_currency_fk" Association="Self.share_currency_fk">
+            <End Role="currencies" EntitySet="currencies" />
+            <End Role="shares" EntitySet="shares" />
+          </AssociationSet>
+          <AssociationSet Name="se_place_fk" Association="Self.se_place_fk">
+            <End Role="places" EntitySet="places" />
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+          </AssociationSet>
+          <AssociationSet Name="shares_prices_fk" Association="Self.shares_prices_fk">
+            <End Role="shares" EntitySet="shares" />
+            <End Role="shares_prices" EntitySet="shares_prices" />
+          </AssociationSet>
+          <AssociationSet Name="trade_share_fk" Association="Self.trade_share_fk">
+            <End Role="shares" EntitySet="shares" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+          <AssociationSet Name="trade_stock_ex_fk" Association="Self.trade_stock_ex_fk">
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+            <End Role="trades" EntitySet="trades" />
+          </AssociationSet>
+          <AssociationSet Name="broker_stock_ex" Association="Self.broker_stock_ex">
+            <End Role="brokers" EntitySet="brokers" />
+            <End Role="stock_exchanges" EntitySet="stock_exchanges" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TradingPlatformModelStoreContainer" CdmEntityContainer="TradingPlatformContext">
+          <EntitySetMapping Name="brokers">
+            <EntityTypeMapping TypeName="TradingPlatformModel.broker">
+              <MappingFragment StoreEntitySet="brokers">
+                <ScalarProperty Name="broker_id" ColumnName="broker_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="companies">
+            <EntityTypeMapping TypeName="TradingPlatformModel.company">
+              <MappingFragment StoreEntitySet="companies">
+                <ScalarProperty Name="company_id" ColumnName="company_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="place_id" ColumnName="place_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="currencies">
+            <EntityTypeMapping TypeName="TradingPlatformModel.currency">
+              <MappingFragment StoreEntitySet="currencies">
+                <ScalarProperty Name="currency_id" ColumnName="currency_id" />
+                <ScalarProperty Name="symbol" ColumnName="symbol" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="places">
+            <EntityTypeMapping TypeName="TradingPlatformModel.place">
+              <MappingFragment StoreEntitySet="places">
+                <ScalarProperty Name="place_id" ColumnName="place_id" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="country" ColumnName="country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="shares">
+            <EntityTypeMapping TypeName="TradingPlatformModel.share">
+              <MappingFragment StoreEntitySet="shares">
+                <ScalarProperty Name="share_id" ColumnName="share_id" />
+                <ScalarProperty Name="company_id" ColumnName="company_id" />
+                <ScalarProperty Name="currency_id" ColumnName="currency_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="shares_prices">
+            <EntityTypeMapping TypeName="TradingPlatformModel.shares_prices">
+              <MappingFragment StoreEntitySet="shares_prices">
+                <ScalarProperty Name="share_id" ColumnName="share_id" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="time_start" ColumnName="time_start" />
+                <ScalarProperty Name="time_end" ColumnName="time_end" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_exchanges">
+            <EntityTypeMapping TypeName="TradingPlatformModel.stock_exchanges">
+              <MappingFragment StoreEntitySet="stock_exchanges">
+                <ScalarProperty Name="stock_ex_id" ColumnName="stock_ex_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="symbol" ColumnName="symbol" />
+                <ScalarProperty Name="place_id" ColumnName="place_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="TradingPlatformModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="trades">
+            <EntityTypeMapping TypeName="TradingPlatformModel.trade">
+              <MappingFragment StoreEntitySet="trades">
+                <ScalarProperty Name="trade_id" ColumnName="trade_id" />
+                <ScalarProperty Name="share_id" ColumnName="share_id" />
+                <ScalarProperty Name="broker_id" ColumnName="broker_id" />
+                <ScalarProperty Name="stock_ex_id" ColumnName="stock_ex_id" />
+                <ScalarProperty Name="transaction_time" ColumnName="transaction_time" />
+                <ScalarProperty Name="share_amount" ColumnName="share_amount" />
+                <ScalarProperty Name="price_total" ColumnName="price_total" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="brokers_Trades_List">
+            <EntityTypeMapping TypeName="TradingPlatformModel.brokers_Trades_List">
+              <MappingFragment StoreEntitySet="brokers_Trades_List">
+                <ScalarProperty Name="broker_id" ColumnName="broker_id" />
+                <ScalarProperty Name="Broker_FullName" ColumnName="Broker_FullName" />
+                <ScalarProperty Name="share_amount" ColumnName="share_amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="broker_stock_ex" TypeName="TradingPlatformModel.broker_stock_ex" StoreEntitySet="broker_stock_ex">
+            <EndProperty Name="brokers">
+              <ScalarProperty Name="broker_id" ColumnName="broker_id" />
+            </EndProperty>
+            <EndProperty Name="stock_exchanges">
+              <ScalarProperty Name="stock_ex_id" ColumnName="stock_ex_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
